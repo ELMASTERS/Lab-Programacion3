@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Contacto con QR</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+      
+        body {
+            transform: scale(1);
+            transform-origin: 0 0;
+
+            padding-bottom: 60px; 
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+      
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        .form-container {
+            display: block;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+           
+        }
+        #qrcode {
+            width: 256px;
+            height: 256px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container form-container">
+    <h2>Formulario de Contacto con QR</h2>
+    <form id="contact-form" class="form-horizontal">
+        <div class="form-group">
+            <label for="name" class="control-label col-sm-2">Nombre:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="phone" class="control-label col-sm-2">Teléfono:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="phone" name="phone" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email" class="control-label col-sm-2">Correo Electrónico:</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" class="btn btn-primary" onclick="generateQR()">Enviar</button>
+            </div>
+        </div>
+    </form>
+</div>
+    <h2>Código QR</h2>
+    <div id="qrcode"></div>
+    
+    <script>
+       function generateQR() {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            
+            const vCard = `BEGIN:VCARD
+VERSION:3.0
+FN:${name}
+TEL:${phone}
+EMAIL:${email}
+END:VCARD`;
+
+            $('#qrcode').empty(); // Clear previous QR code if any
+
+            const qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: vCard,
+                width: 256,
+                height: 256
+            });
+        }
+    </script>
+
+
+<footer>
+    Mario Alberto Cabral - CI6936
+</footer>
+</body>
+</html>

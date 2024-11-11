@@ -94,6 +94,27 @@
             const phone = document.getElementById('phone').value;
             const email = document.getElementById('email').value;
             
+            // Validar en vacio
+            if (name === "" || phone === "" || email === "") {
+                alert("Por favor, complete todos los campos.");
+                return; 
+            }
+
+            // Validar telefono 
+            const phoneRegex = /^[0-9]+$/;
+            if (!phoneRegex.test(phone)) {
+                alert("El teléfono debe contener solo números.");
+                return; 
+            }
+
+               // Validar correo electrónico 
+               const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                alert("Por favor, ingrese un correo electrónico válido.");
+                return; 
+            }
+
+
             const vCard = `BEGIN:VCARD
 VERSION:3.0
 FN:${name}

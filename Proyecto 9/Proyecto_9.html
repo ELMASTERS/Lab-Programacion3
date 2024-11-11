@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario con Gráfico</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            transform: scale(1);
+            transform-origin: 0 0;
+            padding-bottom: 60px;
+
+        }
+
+        .form-container {
+            margin-bottom: 30px;
+        }
+
+        canvas {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+        }
+
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        .form-container {
+            display: block;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+
+        }
+
+        #qrcode {
+            width: 256px;
+            height: 256px;
+            margin: 0 auto;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <h1>Generador de Gráfico de Ventas</h1>
+
+
+    <div class="form-container">
+        <label for="meses">Meses:</label>
+        <input type="text" id="meses" value="Enero,Febrero,Marzo,Abril,Mayo" placeholder="Meses (separados por coma)" />
+
+        <label for="ventas">Ventas:</label>
+        <input type="text" id="ventas" value="1200,1500,1800,1600,2000"
+            placeholder="Ventas por mes (separados por coma)" />
+
+        <button onclick="actualizarGrafico()">Actualizar Gráfico</button>
+    </div>
+
+
+
+    <canvas id="graficoVentas"></canvas>
+
+    <script>
+
+        const ctx = document.getElementById('graficoVentas').getContext('2d');
+
+
+        let graficoVentas = new Chart(ctx, {
+            type: 'bar', // 
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Ventas por mes',
+                    data: [],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+
+        function actualizarGrafico() {
+
+            const meses = document.getElementById('meses').value.split(',');
+            const ventas = document.getElementById('ventas').value.split(',').map(Number);
+
+
+            graficoVentas.data.labels = meses;
+            graficoVentas.data.datasets[0].data = ventas;
+
+
+            graficoVentas.update();
+        }
+
+
+        actualizarGrafico();
+    </script>
+
+
+    <footer>
+        Mario Alberto Cabral - CI6936
+    </footer>
+
+</body>
+
+</html>

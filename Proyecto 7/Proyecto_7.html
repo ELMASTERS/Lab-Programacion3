@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-page Form</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        .form-page {
+            display: none;
+            text-align: center;
+        }
+        .form-page.active {
+            display: block;
+        }
+        .navigation-buttons {
+            margin-top: 20px;
+        }
+        .navigation-buttons .btn {
+            width: 100px;
+        }
+        body {
+            transform: scale(1);
+            transform-origin: 0 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .form-horizontal .form-group {
+            justify-content: center;
+        }
+        .form-horizontal .control-label {
+            text-align: right;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+
+            <h1>Formulario Multi-página</h1>
+        <form id="multiPageForm" class="form-horizontal">
+            <div id="page1" class="form-page active">
+                <span class="label label-primary">Pagina 1</span>
+                <h2>Datos Personales</h2>
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">Nombre:</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="age" class="col-sm-2 control-label">Edad:</label>
+                    <div class="col-sm-10">
+                        <input type="number" id="age" name="age" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+            <div id="page2" class="form-page">
+                <span class="label label-primary">Pagina 2</span>
+                <h2>Familiares</h2>
+                <div id="familyMembers">
+                    <div class="family-member form-group">
+                        <label for="relation" class="col-sm-2 control-label">Parentesco:</label>
+                        <div class="col-sm-4">
+                            <input type="text" name="relation[]" class="form-control" required>
+                        </div>
+                        <label for="familyAge" class="col-sm-2 control-label">Edad:</label>
+                        <div class="col-sm-4">
+                            <input type="number" name="familyAge[]" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-default" onclick="addFamilyMember()">Añadir Familiar</button>
+            </div>
+            <div id="page3" class="form-page">
+                <span class="label label-primary">Pagina 3</span>
+                <h2>Condiciones Pre-Existentes de Salud</h2>
+                <div id="healthConditions">
+                    <div class="health-condition form-group">
+                        <label for="condition" class="col-sm-2 control-label">Enfermedad:</label>
+                        <div class="col-sm-5">
+                            <input type="text" name="condition[]" class="form-control" required>
+                        </div>
+                        <label for="duration" class="col-sm-2 control-label">Tiempo con la Enfermedad (años):</label>
+                        <div class="col-sm-3">
+                            <input type="number" name="duration[]" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-default" onclick="addHealthCondition()">Añadir Condición</button>
+            </div>
+            <div id="page4" class="form-page">
+                <span class="label label-primary">Pagina 4</span>
+                <h2>Internamientos Realizados</h2>
+                <div id="hospitalizations">
+                    <div class="hospitalization form-group">
+                        <label for="date" class="col-sm-2 control-label">Fecha:</label>
+                        <div class="col-sm-3">
+                            <input type="date" name="date[]" class="form-control" required>
+                        </div>
+                        <label for="medicalCenter" class="col-sm-2 control-label">Centro Médico:</label>
+                        <div class="col-sm-5">
+                            <input type="text" name="medicalCenter[]" class="form-control" required>
+                        </div>
+                        <label for="diagnosis" class="col-sm-2 control-label">Diagnóstico:</label>
+                        <div class="col-sm-5">
+                            <input type="text" name="diagnosis[]" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-default" onclick="addHospitalization()">Añadir Internamiento</button>
+            </div>
+            <div id="page5" class="form-page">
+                <span class="label label-primary">Pagina 5</span>
+                <h2>Datos Registrados</h2>
+                <pre id="summary"></pre>
+            </div>
+            <div class="navigation-buttons text-center">
+                <button type="button" class="btn btn-primary" id="prevBtn" onclick="prevPage()">Anterior</button>
+                <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextPage()">Siguiente</button>
+                <button type="submit" class="btn btn-success" id="submitBtn" style="display:none;">Grabar</button>
+            </div>
+
+        </form>
+
+
+
+    </div>
+
+</br>
+</br>
+</br>
+    <footer>
+        Mario Alberto Cabral, Mat. Ci6936
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        let currentPage = 1;
+        const totalPages = 5;
+        
+        function showPage(page) {
+            document.querySelectorAll('.form-page').forEach((el, index) => {
+                el.classList.remove('active');
+                if (index === page - 1) el.classList.add('active');
+            });
+            document.getElementById('prevBtn').style.display = page === 1 ? 'none' : 'inline';
+            document.getElementById('nextBtn').style.display = page === totalPages ? 'none' : 'inline';
+            document.getElementById('submitBtn').style.display = page === totalPages ? 'inline' : 'none';
+        }
+
+        function nextPage() {
+            if (validatePage(currentPage)) {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                }
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        }
+
+        function validatePage(page) {
+            const pageElement = document.querySelector(`#page${page}`);
+            const inputs = pageElement.querySelectorAll('input');
+            for (const input of inputs) {
+                if (!input.checkValidity()) {
+                    input.reportValidity();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function addFamilyMember() {
+            const familyMemberDiv = document.createElement('div');
+            familyMemberDiv.className = 'family-member form-group';
+            familyMemberDiv.innerHTML = `
+                <label for="relation" class="col-sm-2 control-label">Parentesco:</label>
+                <div class="col-sm-4">
+                    <input type="text" name="relation[]" class="form-control" required>
+                </div>
+                <label for="familyAge" class="col-sm-2 control-label">Edad:</label>
+                <div class="col-sm-4">
+                    <input type="number" name="familyAge[]" class="form-control" required>
+                </div>
+            `;
+            document.getElementById('familyMembers').appendChild(familyMemberDiv);
+        }
+
+        function addHealthCondition() {
+            const healthConditionDiv = document.createElement('div');
+            healthConditionDiv.className = 'health-condition form-group';
+            healthConditionDiv.innerHTML = `
+                <label for="condition" class="col-sm-2 control-label">Enfermedad:</label>
+                <div class="col-sm-5">
+                    <input type="text" name="condition[]" class="form-control" required>
+                </div>
+                <label for="duration" class="col-sm-2 control-label">Tiempo con la Enfermedad (años):</label>
+                <div class="col-sm-3">
+                    <input type="number" name="duration[]" class="form-control" required>
+                </div>
+            `;
+            document.getElementById('healthConditions').appendChild(healthConditionDiv);
+        }
+
+        function addHospitalization() {
+            const hospitalizationDiv = document.createElement('div');
+            hospitalizationDiv.className = 'hospitalization form-group';
+            hospitalizationDiv.innerHTML = `
+                <label for="date" class="col-sm-2 control-label">Fecha:</label>
+                <div class="col-sm-3">
+                    <input type="date" name="date[]" class="form-control" required>
+                </div>
+                <label for="medicalCenter" class="col-sm-2 control-label">Centro Médico:</label>
+                <div class="col-sm-5">
+                    <input type="text" name="medicalCenter[]" class="form-control" required>
+                </div>
+                <label for="diagnosis" class="col-sm-2 control-label">Diagnóstico:</label>
+                <div class="col-sm-5">
+                    <input type="text" name="diagnosis[]" class="form-control" required>
+                </div>
+            `;
+            document.getElementById('hospitalizations').appendChild(hospitalizationDiv);
+        }
+
+        document.getElementById('multiPageForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const summary = {};
+            formData.forEach((value, key) => {
+                if (!summary[key]) {
+                    summary[key] = [];
+                }
+                summary[key].push(value);
+            });
+
+            const formattedData = {};
+            Object.keys(summary).forEach(key => {
+                formattedData[key.replace('[]', '')] = summary[key];
+            });
+
+            fetch('saveData.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formattedData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('summary').innerText = JSON.stringify(data, null, 2);
+                showPage(5);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        showPage(currentPage);
+    </script>
+</body>
+</html>

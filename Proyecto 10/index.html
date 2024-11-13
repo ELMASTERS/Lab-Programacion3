@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Datos Personales</title>
+    <link rel="stylesheet" href="styles10.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Formulario de Datos Personales con Acceso a BD</h1>
+
+        <form id="datosPersonalesForm">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label><br>
+                <input type="text" id="nombre" name="nombre" required><br><br>
+            </div>
+
+            <div class="form-group">
+                <label for="apellido">Apellido:</label><br>
+                <input type="text" id="apellido" name="apellido" required><br><br>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Correo Electrónico:</label><br>
+                <input type="email" id="email" name="email" required><br><br>
+            </div>
+
+            <div class="form-group">
+                <label for="telefono">Teléfono:</label><br>
+                <input type="tel" id="telefono" name="telefono" required><br><br>
+            </div>
+
+            <input type="submit" value="Guardar" class="btn">
+        </form>
+
+        <div id="resultado" class="resultado"></div>
+
+        <h2>Datos Registrados</h2>
+        <div id="tablaUsuarios"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Función para cargar los datos de la tabla
+            function cargarDatos() {
+                $.ajax({
+                    url: 'fetch_data.php',
+                    type: 'GET',
+                    success: function (response) {
+                        $('#tablaUsuarios').html(response); // Mostrar la tabla con los datos
+                    },
+                    error: function (xhr, status, error) {
+                        $('#tablaUsuarios').html('Error: ' + error); // Mostrar el error en caso de que ocurra
+                    }
+                });
+            }
+
+            // Cargar los datos inicialmente
+            cargarDatos();
+
+            // Manejar el envío del formulario
+            $('#datosPersonalesForm').on('submit', function (event) {
+                event.preventDefault(); // Prevenir el envío del formulario por defecto
+
+                // Validar que los campos no estén vacíos
+                if ($('#nombre').val() === '' || $('#apellido').val() === '' || $('#email').val() === '' || $('#telefono').val() === '') {
+                    $('#resultado').html('Por favor, completa todos los campos.');
+                    return;
+                }
+
+                $.ajax({
+                    url: 'guardar.php',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        $('#resultado').html(response); // Mostrar la respuesta del servidor
+                        if (response.includes('exitosamente')) {
+                            $('#datosPersonalesForm')[0].reset(); // Limpiar los campos del formulario
+                            cargarDatos(); // Recargar los datos de la tabla
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#resultado').html('Error: ' + error); // Mostrar el error en caso de que ocurra
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
